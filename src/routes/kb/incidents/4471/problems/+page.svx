@@ -4,7 +4,7 @@ title: '#4471 · two problems, not one'
 owner: jpalmowski
 status: closed
 reviewed: 2026-10-31
-signature: jpalmowski
+signature: v1.eyJzdWIiOiIyMzU1IiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTM0ODY1ODUsImV4cCI6MTc5MzU3Mjk4NX0.uuml2Ep_YCbTQiuC3jcxoFIVHQYy0T4M24pcP8n767c
 ---
 
 <script>
