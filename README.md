@@ -41,8 +41,7 @@ Built around the export so it renders: `npm install`, then `npm run build` write
 `build/`. `node scripts/snapshot.mjs kb/incidents/4471/problems` writes that page, styles inlined,
 to `rendered/`.
 
-- New page: `src/routes/kb/incidents/4471/problems/+page.svx` (signed `jpalmowski`), with
-  `src/lib/kb/problems.ts` and `src/lib/kb/ProblemTable.svelte`.
+- New page: `src/routes/kb/incidents/4471/problems/+page.svx` (signed `jpalmowski`).
 - As the desk sees it: `rendered/kb-incidents-4471-problems.html`.
 - One issue per problem in #4471: [#1](https://github.com/jpalmowski/support-kb/issues/1),
   [#2](https://github.com/jpalmowski/support-kb/issues/2),

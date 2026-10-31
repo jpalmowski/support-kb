@@ -1,75 +1,63 @@
 ---
 layout: runbook
-title: '#4471 · three problems, not one'
+title: '#4471 · two problems, not one'
 owner: jpalmowski
-status: proposed
-reviewed: 2026-10-30
+status: closed
+reviewed: 2026-10-31
 signature: jpalmowski
 ---
 
 <script>
-  import ProblemTable from '#lib/kb/ProblemTable.svelte';
   import CauseTable from '#lib/kb/CauseTable.svelte';
   import Callout from '#lib/kb/Callout.svelte';
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
-
-  const repo = 'https://github.com/jpalmowski/support-kb/issues';
-  const tickets = { parser: `${repo}/1`, hint: `${repo}/2`, 'one-day': `${repo}/3` };
-  const labels = {
-    parser: 'shared parser reads month first',
-    hint: 'booking-v3 hint says MM/DD',
-    'one-day': 'booking moves one day (time zone)',
-  };
 </script>
 
-[#4471](/kb/incidents/4471) is marked known: one issue, one fix queued. Its reports show three
-problems. The queued parser fix closes one of them. The other two keep coming after it ships.
+[#4471](/kb/incidents/4471) was merged as one issue with one fix. Its reports show two causes,
+and each now has a ticket of its own. Engineering closed #4471 on 05 Oct.
 
 <Callout kind="warn">
-Not one issue. Each problem below now has a ticket of its own. Count reports against the ticket
-for their problem, not against #4471.
+Two problems, not one. The parser fix closed one of them. The other ended when its form was
+retired, not because a fix shipped.
 </Callout>
 
 ## The problems
 
-<ProblemTable ticket={4471} {tickets} {labels} />
+<CauseTable ticket={4471} />
+
+| cause | ticket | outcome |
+|---|---|---|
+| `parser` | [#1](https://github.com/jpalmowski/support-kb/issues/1) | fixed: `fix(dates): parse dd/mm for eu locales` |
+| `hint` | [#2](https://github.com/jpalmowski/support-kb/issues/2) | won't fix: booking-v3 form retired |
 
 - **Shared parser reads month first.** Every tenant writes the day first. The parser swaps day and
   month on any date with a day of 12 or less: a booking for 7 April becomes an invite for 4 July.
-  This is the bug #4471 is named for. [Ticket](https://github.com/jpalmowski/support-kb/issues/1).
+  This is the bug #4471 is named for.
 - **booking-v3 hint says MM/DD.** The booking-v3 form prints `MM/DD/YYYY` under its date field,
   then reads the field day first. People type what the hint says, and the date flips before it
-  reaches the parser. Fixing the parser does not fix this.
-  [Ticket](https://github.com/jpalmowski/support-kb/issues/2).
-- **Booking moves one day.** Some reports describe a one-day shift, not a swap. The same meeting
-  shows Tuesday in Lisbon and Monday in Toronto, and an invite can arrive before its booking. That
-  is a time-zone conversion bug. The desk noted these reports (`oneDayMove`) but filed them under
-  the parser. [Ticket](https://github.com/jpalmowski/support-kb/issues/3).
+  reaches the parser. The parser fix does not touch it; retiring the form ends it.
+
+The reports the desk read as a one-day move are counted under `parser`, where their tenant files
+them. A ticket opened for them ([#3](https://github.com/jpalmowski/support-kb/issues/3)) is
+closed as a duplicate of #1.
 
 ## How the reports are placed
 
-A report's problem comes from where it was made, not from its subject line or its intake tag:
+A report's cause comes from where it was made, not from its subject line or its intake tag:
 
 1. Take each report once. The export repeats some reports across pages, so count by id.
 2. Tenant and channel decide the cause (`causes.ts`): a day-first tenant using the booking-v3
-   form has the hint problem. Every other report from a day-first tenant has the parser problem.
-3. A report the desk read as a one-day move (`desk-notes.json`) has the time-zone problem,
-   whatever its tenant.
+   form has the hint cause. Every other report from a day-first tenant has the parser cause.
 
-The intake tag is a guess from the reporter's browser. It disagrees with the tenant on dozens of
-these reports, in both directions, so it does not decide the problem.
-
-The kb's own cause table for #4471, for comparison. It already marks the hint problem as having
-no ticket, and it counts the one-day moves under the parser:
-
-<CauseTable ticket={4471} />
+The intake tag is a guess from the reporter's browser. It disagrees with the cause on reports in
+both directions, so it does not decide the ticket.
 
 ## What changes for the desk
 
-- A date report from a booking-v3 tenant's form goes to the hint ticket, not to #4471.
-- A report of a booking moved by one day goes to the time-zone ticket, not to #4471.
-- Merging on subject ([decision 0001](/kb/decisions/0001-dedupe-by-subject)) put all three
-  problems in one ticket. Before merging a date report, check the tenant, the channel and what the
-  body shows.
+- Two reports are duplicates when they share a **cause**, not a subject. The
+  [dedupe explorer](/kb/triage/dedupe) shows subject and cause disagreeing in every case it
+  tests. [Decision 0001](/kb/decisions/0001-dedupe-by-subject) (merge on subject) put both
+  causes in #4471, and it is stale. It needs a new decision record to replace it.
+- Before merging a date report, check the tenant and the channel.
 
 <RenderStamp {signature} />
